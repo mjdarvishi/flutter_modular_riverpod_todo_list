@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular_todo_list/app/modules/core/floor/DAOs/todo/todo.entity.dart';
 import 'package:flutter_modular_todo_list/app/modules/todo/add/add.controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:formz/formz.dart';
 
-class AddTodoPage extends StatelessWidget {
-   AddTodoPage({Key? key}) : super(key: key);
-  final nameController=TextEditingController();
-  final desController=TextEditingController();
-  final dateController=TextEditingController();
+class AddTodoPage extends ConsumerWidget {
+  AddTodoPage({Key? key}) : super(key: key);
+  final nameController = TextEditingController();
+  final desController = TextEditingController();
+  final dateController = TextEditingController();
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return SafeArea(
       child: Scaffold(
         body: Column(
@@ -18,28 +20,57 @@ class AddTodoPage extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
                 controller: nameController,
-                decoration: const InputDecoration(hintText: 'name'),
+                onChanged: (value) => ref
+                    .read(addTodoNotifierProvider.notifier)
+                    .nameOnChange(value),
+                decoration: InputDecoration(
+                    hintText: 'name',
+                    errorText: ref
+                        .watch(addTodoNotifierProvider)
+                        .name
+                        ?.error
+                        ?.getMessage()),
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                onChanged: (value) => ref
+                    .read(addTodoNotifierProvider.notifier)
+                    .desOnChange(value),
                 controller: desController,
-                decoration: const InputDecoration(hintText: 'des'),
+                decoration: InputDecoration(
+                    hintText: 'des',
+                    errorText: ref
+                        .watch(addTodoNotifierProvider)
+                        .des
+                        ?.error
+                        ?.getMessage()),
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                onChanged: (value) => ref
+                    .read(addTodoNotifierProvider.notifier)
+                    .dateOnChange(value),
                 controller: dateController,
-                decoration: const InputDecoration(hintText: 'date'),
+                decoration: InputDecoration(
+                    hintText: 'date',
+                    errorText: ref
+                        .watch(addTodoNotifierProvider)
+                        .date
+                        ?.error
+                        ?.getMessage()),
               ),
             ),
             Consumer(
-              builder: (context, ref, child) =>
-                  ElevatedButton(onPressed: () {
-                    ref.read(addTodoProvider(TodoEntity(nameController.text,desController.text,dateController.text)));
-                  }, child: const Text('add')),
+              builder: (context, ref, child) => ElevatedButton(
+                  onPressed:ref.watch(addTodoNotifierProvider).status.isValid? () {
+                      ref.read(addTodoProvider);
+
+                  }:null,
+                  child: const Text('add')),
             )
           ],
         ),

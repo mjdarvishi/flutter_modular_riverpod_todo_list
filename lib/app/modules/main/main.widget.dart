@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter_modular_todo_list/app/core/theme.dart';
+import 'package:flutter_modular_todo_list/app/utils/theme.dart';
 
 class MainWidget extends StatelessWidget {
   const MainWidget({super.key});
